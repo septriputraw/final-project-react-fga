@@ -8,6 +8,12 @@ const Navbar = () => {
 
     // jika sudah ada token dan sudah login, tambahkan tombol logout
     const token = localStorage.getItem('token');
+
+    // handle logout
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    };
     
 
     return (
@@ -26,7 +32,12 @@ const Navbar = () => {
                             <Link className="nav-link" to="/cart">Cart ({cart.length})</Link>
                         </li>
                     </ul>
-                    <Link className="btn btn-outline-primary" to="/login">{isLoggedIn && token ? 'Logout' : 'Login'}</Link>
+                    {/* <Link className="btn btn-outline-primary" to="/login">{token ? 'Logout' : 'Login'}</Link> */}
+                    {token ? (
+                        <button className="btn btn-outline-primary" onClick={handleLogout}>Logout</button>
+                    ) : (
+                        <Link className="btn btn-outline-primary" to="/login">Login</Link>
+                    )}
                 </div>
             </div>
         </nav>

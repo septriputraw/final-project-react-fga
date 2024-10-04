@@ -13,8 +13,11 @@ const ProductDetail = () => {
     // add to cart only if user is logged in
     const isLoggedIn = useSelector(state => state.isLoggedIn);
 
+    // cek apakah user sudah login
+    const token = localStorage.getItem('token');
+
     const handleAddToCart = () => {
-        if (!isLoggedIn) {
+        if (!token) {
             return (
                 alert('Please login to add to cart')
             );

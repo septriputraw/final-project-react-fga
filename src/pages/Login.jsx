@@ -13,7 +13,7 @@ const Login = () => {
     // jika belum login, tampilkan form login
     const isLoggedIn = localStorage.getItem('token');
     const loginState = useSelector(state => state.isLoggedIn);
-    if (isLoggedIn && loginState) {
+    if (isLoggedIn) {
         window.location.href = '/';
     }
 

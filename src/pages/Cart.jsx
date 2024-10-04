@@ -23,10 +23,10 @@ const Cart = () => {
     }
 
     // jika ada token, tapi user belum login, redirect ke halaman login
-    if (!isLoggedIn
-        && token) {
-        window.location.href = '/login';
-    }
+    // if (!isLoggedIn
+    //     && token) {
+    //     window.location.href = '/login';
+    // }
 
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));

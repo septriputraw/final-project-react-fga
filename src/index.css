@@ -1,0 +1,9 @@
+/* src/App.css or src/styles.css */
+.card {
+  transition: all 0.3s ease; /* Smooth transition for card */
+}
+
+.placeholder {
+  background-color: #e0e0e0; /* Light gray for placeholder */
+  border-radius: 4px; /* Rounded corners for placeholder */
+}

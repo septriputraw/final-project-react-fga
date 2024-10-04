@@ -19,7 +19,9 @@ const Cart = () => {
     // get token from local storage
     const token = localStorage.getItem('token');
     if (!token) {
-        window.location.href = '/login';
+        return (
+            alert('Please login to view cart', window.location.href = '/login')
+        );
     }
 
     // jika ada token, tapi user belum login, redirect ke halaman login

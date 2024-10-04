@@ -11,9 +11,6 @@ const HomePage = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const dispatch = useDispatch();
 
-    // cek produk yang ada di cart
-    const cart = useSelector(state => state.cart);
-
     // get product id from product 
     const { id } = useParams();
     const product = products.find(p => p.id === Number(id));
@@ -46,7 +43,7 @@ const HomePage = () => {
     const handleAddToCart = () => {
         if (!token) {
             return (
-                alert('Please login to add to cart')
+                alert('Please login to add to cart', window.location.href = '/login')
             );
         }
         dispatch(addToCart(product));

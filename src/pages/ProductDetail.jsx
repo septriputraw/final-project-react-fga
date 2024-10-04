@@ -19,7 +19,7 @@ const ProductDetail = () => {
     const handleAddToCart = () => {
         if (!token) {
             return (
-                alert('Please login to add to cart')
+                alert('Please login to add to cart', window.location.href = '/login')
             );
         }
         dispatch(addToCart(product));

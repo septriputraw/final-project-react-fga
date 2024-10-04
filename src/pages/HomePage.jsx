@@ -11,7 +11,7 @@ const HomePage = () => {
     const skeletonLoader = (
         <div className="row">
             {[...Array(6)].map((_, index) => (
-                <div className="col-md-4 mb-3" key={index}>
+                <div className="col-md-3 mb-3" key={index}>
                     <Card>
                         <Placeholder xs={12} style={{ height: '200px' }} /> {/* Placeholder for image */}
                         <Card.Body>
@@ -31,7 +31,7 @@ const HomePage = () => {
     return (
         <div className="row">
             {products.map(product => (
-                <div className="col-md-4 mb-3" key={product.id}>
+                <div className="col-md-3 mb-3" key={product.id}>
                     <Card>
                         <Card.Img variant="top" src={product.image} alt={product.title} />
                         <Card.Body>

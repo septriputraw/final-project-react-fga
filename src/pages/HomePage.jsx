@@ -10,7 +10,7 @@ const HomePage = () => {
     // Create skeleton loading placeholders
     const skeletonLoader = (
         <div className="row">
-            {[...Array(6)].map((_, index) => (
+            {[...Array(8)].map((_, index) => (
                 <div className="col-md-3 mb-3" key={index}>
                     <Card>
                         <Placeholder xs={12} style={{ height: '200px' }} /> {/* Placeholder for image */}

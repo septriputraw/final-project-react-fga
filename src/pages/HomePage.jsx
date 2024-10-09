@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Card, Placeholder } from 'react-bootstrap'; // Import Placeholder from react-bootstrap
-import { addToCart } from '../redux/actions';
+import { addToCart, setProducts } from '../redux/actions';
 
 const HomePage = () => {
-    const products = useSelector(state => state.products);
+    const products = useSelector(state => state.products); // Get products from redux
     const isLoading = useSelector(state => state.isLoading); // Get loading state
-    const isLoggedIn = useSelector(state => state.isLoggedIn);
+    const isLoggedIn = useSelector(state => state.isLoggedIn); // Get logged-in state
+    const cart = useSelector(state => state.cart); // Get cart from redux
     const dispatch = useDispatch();
 
-    // get product id from product 
-    const { id } = useParams();
-    const product = products.find(p => p.id === Number(id));
+    // Get products from Redux
     
 
-    // cek apakah user sudah login
+    // console.log('Products from Redux:', products);
+    
+    // Check if token exists in localStorage to confirm login
     const token = localStorage.getItem('token');
 
-    // Create skeleton loading placeholders
+    // Skeleton loader (Placeholder) for loading state
     const skeletonLoader = (
         <div className="row">
             {[...Array(8)].map((_, index) => (
@@ -36,19 +36,66 @@ const HomePage = () => {
         </div>
     );
 
-    if (isLoading) {
-        return skeletonLoader; // Show skeleton loaders while loading
-    }
-
-    const handleAddToCart = () => {
+    // Handle adding products to cart
+    const handleAddToCart = (product) => {
         if (!token) {
-            return (
-                alert('Please login to add to cart', window.location.href = '/login')
-            );
+            // Redirect to login if user is not logged in
+            alert('Please login to add to cart');
+            window.location.href = '/login';
+        } else {
+            // Get the current cart from Redux and localStorage
+            const cartInLocalStorage = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingProduct = cartInLocalStorage.find(item => item.id === product.id);
+    
+            if (existingProduct) {
+                // Product already in cart, increase the quantity
+                existingProduct.quantity += 1;
+            } else {
+                // Product not in cart, add new product with quantity 1
+                cartInLocalStorage.push({ ...product, quantity: 1 });
+            }
+    
+            // Update localStorage with the new cart data
+            localStorage.setItem('cart', JSON.stringify(cartInLocalStorage));
+    
+            // Dispatch Redux action to update the cart state
+            dispatch(addToCart({ ...product, quantity: (existingProduct ? existingProduct.quantity : 1) }));
+    
+            alert('Added to cart');
         }
-        dispatch(addToCart(product));
-        alert('Added to cart');
-    };
+    };    
+
+    useEffect(() => {
+        let storedProducts = JSON.parse(localStorage.getItem('products'));
+        // console.log('====================================');
+        // console.log('Stored products:', storedProducts);
+        // console.log('====================================');
+
+        if (!storedProducts) {
+            // If no products in localStorage, fetch from API
+            console.log('====================================');
+            console.log('Fetching products from API');
+            console.log('====================================');
+            fetch('https://fakestoreapi.com/products')
+                .then(res => res.json())
+                .then(data => {
+                    dispatch(setProducts(data));
+                    localStorage.setItem('products', JSON.stringify(data)); // Save to localStorage
+                })
+                .catch(error => console.error('Failed to fetch products:', error));
+        } else {
+            // If products are in localStorage, set them in Redux
+            console.log('====================================');
+            console.log('Setting products from localStorage');
+            console.log('====================================');
+            dispatch(setProducts(storedProducts));
+        }
+    }, [dispatch]);
+
+    // Handle displaying loading skeleton if data is still loading
+    if (isLoading || !products) {
+        return skeletonLoader;
+    }
 
     return (
         <div className="row">
@@ -61,8 +108,11 @@ const HomePage = () => {
                                 {product.title}
                             </Card.Title>
                             <Card.Text>${product.price}</Card.Text>
+                            {/* Show product quantity */}
+                            <Card.Text>Quantity: {product.quantity}</Card.Text>
+                            {/* Add to Cart and View Details buttons */}
                             <div className="d-flex justify-content-between">
-                                <button className="btn btn-secondary" onClick={handleAddToCart}>Add to Cart</button>
+                                <button className="btn btn-secondary" onClick={() => handleAddToCart(product)}>Add to Cart</button>
                                 <Link to={`/product/${product.id}`} className="btn btn-primary">View Details</Link>
                             </div>
                         </Card.Body>

@@ -28,9 +28,11 @@ const Navbar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Home</Link>
                         </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/cart">Cart ({cart.length})</Link>
-                        </li>
+                        {token && (
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/cart">Cart ({cart.length})</Link>
+                            </li>
+                        )}
                     </ul>
                     {/* <Link className="btn btn-outline-primary" to="/login">{token ? 'Logout' : 'Login'}</Link> */}
                     {token ? (

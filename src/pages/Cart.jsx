@@ -1,37 +1,28 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromCart } from '../redux/actions';
+import { removeFromCart, addQuantity, subtractQuantity, checkoutCart } from '../redux/actions';
 
 const Cart = () => {
     const cart = useSelector(state => state.cart);
     const dispatch = useDispatch();
 
-    // cek jika user sudah login
-    // jika sudah login, tampilkan cart
-    // jika belum login, tampilkan pesan "Please login to view cart"
-    // jika cart kosong, tampilkan pesan "Your cart is empty"
-    // jika cart tidak kosong, tampilkan list cart
-    // setiap item di cart harus ada tombol remove
-    // ketika tombol remove ditekan, item tersebut dihapus
-
-    const isLoggedIn = useSelector(state => state.isLoggedIn);
-
-    // get token from local storage
-    const token = localStorage.getItem('token');
-    if (!token) {
-        return (
-            alert('Please login to view cart', window.location.href = '/login')
-        );
-    }
-
-    // jika ada token, tapi user belum login, redirect ke halaman login
-    // if (!isLoggedIn
-    //     && token) {
-    //     window.location.href = '/login';
-    // }
-
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));
+    };
+
+    const handleAddQuantity = (productId) => {
+        dispatch(addQuantity(productId));
+    };
+
+    const handleSubtractQuantity = (productId) => {
+        dispatch(subtractQuantity(productId));
+    };
+
+    const handleCheckout = () => {
+        dispatch(checkoutCart());
+        alert('Checkout successful!');
+        // Uncomment the next line to redirect after checkout
+        // window.location.href = '/';
     };
 
     return (
@@ -40,14 +31,30 @@ const Cart = () => {
             {cart.length === 0 ? (
                 <p>Your cart is empty</p>
             ) : (
-                <ul className="list-group">
+                <div className="row">
                     {cart.map(item => (
-                        <li className="list-group-item d-flex justify-content-between align-items-center" key={item.id}>
-                            {item.title} - ${item.price} (x{item.quantity})
-                            <button className="btn btn-danger" onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
-                        </li>
+                        <div className="col-md-4 mb-3" key={item.id}>
+                            <div className="card">
+                                <img src={item.image} className="card-img-top" alt={item.title} />
+                                <div className="card-body">
+                                    <h5 className="card-title">{item.title}</h5>
+                                    <p className="card-text">${item.price}</p>
+                                    <div className="d-flex align-items-center">
+                                        <button className="btn btn-danger me-2" onClick={() => handleSubtractQuantity(item.id)}>-</button>
+                                        <span>{item.quantity}</span>
+                                        <button className="btn btn-primary ms-2" onClick={() => handleAddQuantity(item.id)}>+</button>
+                                    </div>
+                                    <p className="card-text mt-2">Total: ${item.price * item.quantity}</p>
+                                    <button className="btn btn-danger" onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                    <div className="col-md-12">
+                        <h4>Total: ${cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</h4>
+                        <button className="btn btn-primary" onClick={handleCheckout}>Checkout</button>
+                    </div>
+                </div>
             )}
         </div>
     );

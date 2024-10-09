@@ -18,7 +18,9 @@ const App = () => {
             try {
                 const response = await axios.get('https://fakestoreapi.com/products?limit=20'); // Fetch at least 20 products
                 dispatch(setProducts(response.data));
-                localStorage.setItem('products', JSON.stringify(response.data));
+                // tambah quantity pada product, default quantity = 20
+                const productsWithQuantity = response.data.map(product => ({ ...product, quantity: 20 }));
+                localStorage.setItem('products', JSON.stringify(productsWithQuantity));
             } catch (error) {
                 console.error("Error fetching products:", error);
             } finally {

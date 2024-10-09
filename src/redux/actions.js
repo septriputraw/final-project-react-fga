@@ -62,25 +62,27 @@ export const clearCart = () => ({
 // Action creators
 export const addToCart = (product) => (dispatch, getState) => {
     const cart = getState().cart;
-    
+
     // Check if the product already exists in the cart
     const existingProduct = cart.find(item => item.id === product.id);
     
     if (existingProduct) {
-        // If it exists, increase the quantity
+        // If it exists, update the quantity
         dispatch({
             type: 'UPDATE_CART_QUANTITY',
-            payload: { ...existingProduct, quantity: existingProduct.quantity + 1 }
+            payload: { 
+                id: existingProduct.id, 
+                quantity: existingProduct.quantity + product.quantity 
+            }
         });
     } else {
         // If it doesn't exist, add it to the cart
         dispatch({
             type: 'ADD_TO_CART',
-            payload: { ...product, quantity: 1 }
+            payload: { ...product, quantity: product.quantity }
         });
     }
 };
-
 
 export const removeFromCart = (productId) => ({
     type: REMOVE_FROM_CART,
